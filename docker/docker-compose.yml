@@ -1,0 +1,40 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: mongo-dev
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: cp_tracker
+    volumes:
+      - ../database/initdb.d/:/docker-entrypoint-initdb.d/
+      - mongo_data:/data/db
+    networks:
+      - cp_tracker-network
+
+  app-dev:
+    image: golang:1.24
+    container_name: app-dev
+    depends_on:
+      - mongo
+    ports:
+      - "8080:8080"
+    environment:
+      - GIN_MODE=debug
+      - MONGO_URI=mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo:27017
+    volumes:
+      - ../src:/app/src
+    networks:
+      - cp_tracker-network
+    working_dir: /app/src
+    command: go run main.go
+
+networks:
+  cp_tracker-network:
+    driver: bridge
+
+volumes:
+  mongo_data:
+    driver: local
