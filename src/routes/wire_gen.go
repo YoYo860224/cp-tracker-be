@@ -10,6 +10,7 @@ import (
 	"cp_tracker/db"
 	"cp_tracker/user/controllers"
 	"cp_tracker/user/services"
+
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -24,11 +25,20 @@ func InitializeApp() (App, error) {
 	if err != nil {
 		return App{}, err
 	}
-	userController := controllers.NewUserController(userService)
+	inviteCodeService, err := services.NewInviteCodeService(database)
+	if err != nil {
+		return App{}, err
+	}
+	userController := controllers.NewUserController(userService, inviteCodeService)
+	userDataService := services.NewUserDataService(database)
+	userDataController := controllers.NewUserDataController(userDataService)
 	app := App{
-		MongoDB:        database,
-		UserService:    userService,
-		UserController: userController,
+		MongoDB:            database,
+		UserService:        userService,
+		UserController:     userController,
+		InviteCodeService:  inviteCodeService,
+		UserDataService:    userDataService,
+		UserDataController: userDataController,
 	}
 	return app, nil
 }
@@ -36,7 +46,10 @@ func InitializeApp() (App, error) {
 // wire.go:
 
 type App struct {
-	MongoDB        *mongo.Database
-	UserService    *services.UserService
-	UserController *controllers.UserController
+	MongoDB            *mongo.Database
+	UserService        *services.UserService
+	UserController     *controllers.UserController
+	InviteCodeService  *services.InviteCodeService
+	UserDataService    *services.UserDataService
+	UserDataController *controllers.UserDataController
 }

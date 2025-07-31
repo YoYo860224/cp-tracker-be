@@ -13,7 +13,7 @@
                 "GIN_MODE": "debug",
                 "MONGO_URI": "mongodb://root:testpass@localhost:27017"
             },
-            "program": "${fileDirname}"
+            "program": "${workspaceFolder}/src/main.go",
         }
     ]
 }

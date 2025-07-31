@@ -14,9 +14,12 @@ import (
 )
 
 type App struct {
-	MongoDB        *mongo.Database
-	UserService    *services.UserService
-	UserController *controllers.UserController
+	MongoDB            *mongo.Database
+	UserService        *services.UserService
+	UserController     *controllers.UserController
+	UserDataService    *services.UserDataService
+	UserDataController *controllers.UserDataController
+	InviteCodeService  *services.InviteCodeService
 }
 
 func InitializeApp() (App, error) {
@@ -24,6 +27,9 @@ func InitializeApp() (App, error) {
 		db.ProvideMongoDB,
 		services.NewUserService,
 		controllers.NewUserController,
+		services.NewUserDataService,
+		controllers.NewUserDataController,
+		services.NewInviteCodeService,
 		wire.Struct(new(App), "*"),
 	)
 	return App{}, nil
