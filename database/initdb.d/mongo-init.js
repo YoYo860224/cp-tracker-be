@@ -11,13 +11,13 @@ db = db.getSiblingDB('cp_tracker');
 if (!db.getCollectionNames().includes('user')) {
     db.createCollection('user');
 }
-db.users.createIndex({ "email": 1 }, { unique: true });
+db.user.createIndex({ "email": 1 }, { unique: true });
 
 // 建立邀請碼集合
 if (!db.getCollectionNames().includes('invite_code')) {
     db.createCollection('invite_code');
 }
-db.invite_codes.createIndex({ "code": 1 }, { unique: true });
+db.invite_code.createIndex({ "code": 1 }, { unique: true });
 
 // 建立 user_data 集合
 if (!db.getCollectionNames().includes('user_data')) {
