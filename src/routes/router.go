@@ -2,6 +2,8 @@ package routes
 
 import (
 	"cp_tracker/user/middlewares"
+	"os"
+	"strings"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -13,10 +15,17 @@ func InitializeRoute(app *App) *gin.Engine {
 	r := gin.Default()
 
 	// 設定 CORS，允許所有 localhost 來源
+	allowOriginsEnv := os.Getenv("ALLOW_ORIGINS")
+	var allowOrigins []string
+	if allowOriginsEnv != "" {
+		allowOrigins = strings.Split(allowOriginsEnv, ",")
+	} else {
+		allowOrigins = []string{
+			"https://yoyo860224.github.io",
+		}
+	}
 	corsConfig := cors.Config{
-		AllowOrigins: []string{
-			"http://localhost:4200",
-		},
+		AllowOrigins:     allowOrigins,
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		AllowCredentials: true,
